@@ -47,6 +47,41 @@
             overflow: hidden;
             box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: background-color 0.3s ease;
+        }
+
+        .game-container.correct-feedback {
+            background-color: rgba(46, 204, 113, 0.3);
+        }
+
+        .game-container.wrong-feedback {
+            background-color: rgba(231, 76, 60, 0.3);
+        }
+
+        @keyframes feedbackFade {
+            0% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        .feedback-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            opacity: 0;
+            border-radius: 15px;
+        }
+
+        .feedback-overlay.correct {
+            background-color: rgba(46, 204, 113, 0.3);
+            animation: feedbackFade 0.5s ease-out;
+        }
+
+        .feedback-overlay.wrong {
+            background-color: rgba(231, 76, 60, 0.3);
+            animation: feedbackFade 0.5s ease-out;
         }
 
         .game-info {
@@ -321,111 +356,198 @@
             max-width: 90%;
             width: 80%;
             z-index: 10;
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
         .game-over h2 {
             color: #3498db;
-            font-size: 28px;
-            margin-bottom: 15px;
+            font-size: 20px;
+            margin-bottom: 8px;
             text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
         }
 
         .final-score {
-            font-size: 42px;
+            font-size: 28px;
             font-weight: 700;
             color: #2ecc71;
             text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
             display: inline-block;
-            padding: 5px 15px;
-            border-radius: 10px;
+            padding: 3px 12px;
+            border-radius: 8px;
             background: rgba(46, 204, 113, 0.1);
-            margin: 10px 0 20px;
+            margin: 5px 0 10px;
         }
 
         .game-stats {
-            margin: 15px 0;
+            margin: 10px 0;
             padding: 10px;
             background: rgba(44, 62, 80, 0.7);
             border-radius: 10px;
             text-align: center;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+        
+        .phase-stats {
+            margin: 8px 0;
+            padding: 12px;
+            background: rgba(52, 73, 94, 0.5);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .phase-stats::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: #3498db;
+        }
+        
+        .phase-stats.double::before {
+            background: #e67e22;
+        }
+        
+        .phase-stats.triple::before {
+            background: #e74c3c;
+        }
+        
+        .phase-stats h3 {
+            color: #3498db;
+            margin: 0 0 8px 0;
+            font-size: 14px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .phase-stats.double h3 {
+            color: #e67e22;
+        }
+        
+        .phase-stats.triple h3 {
+            color: #e74c3c;
+        }
+        
+        .phase-stats h3::before,
+        .phase-stats h3::after {
+            content: '★';
+            margin: 0 8px;
+            font-size: 12px;
+            opacity: 0.7;
         }
         
         .stats-row {
             display: flex;
             justify-content: space-between;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-        
-        .stats-row:last-child {
+            gap: 8px;
             margin-bottom: 0;
         }
         
         .stat-item {
             flex: 1;
-            padding: 12px;
+            padding: 8px;
             background: rgba(52, 73, 94, 0.5);
-            border-radius: 8px;
+            border-radius: 6px;
             text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
         }
         
         .stat-label {
             color: #bdc3c7;
-            font-size: 16px;
-            margin-bottom: 5px;
-            width: 100%;
-            text-align: center;
+            font-size: 11px;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
         .stat-value {
             font-weight: bold;
-            color: #3498db;
-            font-size: 24px;
-            margin-bottom: 5px;
-            width: 100%;
-            text-align: center;
+            font-size: 14px;
+            margin-bottom: 2px;
+            text-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
+        }
+        
+        /* 反应时间颜色等级 */
+        .stat-value.speed-s {
+            color: #2ecc71;  /* 柔和的绿色 */
+            text-shadow: 0 0 10px rgba(46, 204, 113, 0.5);
+        }
+        
+        .stat-value.speed-a {
+            color: #f1c40f;  /* 柔和的黄色 */
+            text-shadow: 0 0 10px rgba(241, 196, 15, 0.5);
+        }
+        
+        .stat-value.speed-b {
+            color: #e67e22;  /* 柔和的橙色 */
+            text-shadow: 0 0 10px rgba(230, 126, 34, 0.5);
+        }
+        
+        .stat-value.speed-c {
+            color: #e74c3c;  /* 柔和的红色 */
+            text-shadow: 0 0 10px rgba(231, 76, 60, 0.5);
+        }
+        
+        /* 准确率颜色等级 */
+        .stat-value.accuracy-s {
+            color: #2ecc71;
+            text-shadow: 0 0 10px rgba(46, 204, 113, 0.5);
+        }
+        
+        .stat-value.accuracy-a {
+            color: #f1c40f;
+            text-shadow: 0 0 10px rgba(241, 196, 15, 0.5);
+        }
+        
+        .stat-value.accuracy-b {
+            color: #e67e22;
+            text-shadow: 0 0 10px rgba(230, 126, 34, 0.5);
+        }
+        
+        .stat-value.accuracy-c {
+            color: #e74c3c;
+            text-shadow: 0 0 10px rgba(231, 76, 60, 0.5);
         }
         
         .stat-detail {
-            font-size: 12px;
+            font-size: 10px;
             color: #95a5a6;
-            width: 100%;
-            text-align: center;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
         }
-
-        .reaction-log {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80%;
-            height: 100px;
-            background: rgba(44, 62, 80, 0.6);
-            border-radius: 10px;
-            padding: 10px;
-            overflow-y: auto;
-            font-size: 14px;
-            color: #bdc3c7;
-        }
-
-        .log-entry {
-            margin-bottom: 5px;
-            padding: 5px;
-            border-radius: 5px;
-        }
-
-        .log-entry.correct {
-            background: rgba(46, 204, 113, 0.2);
+        
+        .stat-detail .correct {
             color: #2ecc71;
         }
-
-        .log-entry.wrong {
-            background: rgba(231, 76, 60, 0.2);
+        
+        .stat-detail .wrong {
             color: #e74c3c;
+        }
+
+        /* 无效测试样式 */
+        .invalid-test {
+            background: rgba(231, 76, 60, 0.1) !important;
+            border: 1px solid rgba(231, 76, 60, 0.3) !important;
+        }
+        
+        .invalid-test .stat-label {
+            color: #e74c3c;
+            font-weight: 600;
+        }
+        
+        .invalid-test .stat-value {
+            font-size: 12px;
+            color: #e74c3c;
+            text-shadow: none;
         }
 
         /* 优化倒计时样式 */
@@ -466,6 +588,148 @@
             100% {
                 transform: translate(-50%, -50%) scale(1.1);
                 text-shadow: 0 0 30px rgba(52, 152, 219, 1);
+            }
+        }
+
+        /* 优化难度升级提示样式 */
+        .difficulty-upgrade {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(41, 128, 185, 0.95);
+            padding: 30px 50px;
+            border-radius: 20px;
+            color: white;
+            text-align: center;
+            opacity: 0;
+            z-index: 100;
+            pointer-events: none;
+            box-shadow: 0 0 40px rgba(41, 128, 185, 0.6);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .upgrade-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .upgrade-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .upgrade-text {
+            font-size: 28px;
+            font-weight: bold;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .upgrade-subtext {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        .difficulty-upgrade.show {
+            animation: showUpgrade 3s ease-in-out forwards;
+        }
+
+        @keyframes showUpgrade {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+            20% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+            80% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(1.2);
+            }
+        }
+
+        /* 优化游戏信息面板中的阶段显示 */
+        .info-item .phase-indicator {
+            font-size: 12px;
+            padding: 3px 8px;
+            border-radius: 12px;
+            background: rgba(52, 152, 219, 0.2);
+            color: #3498db;
+            margin-left: 8px;
+        }
+
+        .info-item.double-phase .phase-indicator {
+            background: rgba(230, 126, 34, 0.2);
+            color: #e67e22;
+        }
+
+        .info-item.triple-phase .phase-indicator {
+            background: rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+        }
+
+        /* 优化阶段显示面板 */
+        .info-item.single-phase,
+        .info-item.double-phase,
+        .info-item.triple-phase {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .info-item.single-phase { border-left: 3px solid #3498db; }
+        .info-item.double-phase { border-left: 3px solid #e67e22; }
+        .info-item.triple-phase { border-left: 3px solid #e74c3c; }
+
+        .phase-rounds {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        /* 优化难度升级提示 */
+        .difficulty-upgrade {
+            background: rgba(41, 128, 185, 0.95);
+            padding: 40px 60px;
+            border-radius: 25px;
+            box-shadow: 0 0 50px rgba(41, 128, 185, 0.8);
+        }
+
+        .upgrade-detail {
+            margin-top: 15px;
+            font-size: 16px;
+            opacity: 0.8;
+        }
+
+        .difficulty-upgrade.show {
+            animation: showUpgrade 3.5s ease-in-out forwards;
+        }
+
+        @keyframes showUpgrade {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+            15% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1.1);
+            }
+            25% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+            75% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(1.2);
             }
         }
     </style>
@@ -524,8 +788,16 @@
                     </div>
                 </div>
             </div>
-            <div class="reaction-log"></div>
+            <div class="feedback-overlay"></div>
             <div class="countdown">3</div>
+            <div class="difficulty-upgrade">
+                <div class="upgrade-content">
+                    <div class="upgrade-icon">⚡</div>
+                    <div class="upgrade-text">难度提升！</div>
+                    <div class="upgrade-subtext">即将进入<span id="nextPhaseText">双键</span>阶段</div>
+                    <div class="upgrade-detail">准备好接受更大的挑战了吗？</div>
+                </div>
+            </div>
             <div class="start-screen">
                 <div class="start-title">反应测试挑战</div>
                 <div class="game-instructions">
@@ -538,27 +810,28 @@
             </div>
             <div class="game-over">
                 <h2>游戏结束！</h2>
-                <p>你的平均反应时间：<span class="final-score">0ms</span></p>
                 <div class="game-stats">
-                    <div class="stats-row">
-                        <div class="stat-item">
-                            <div class="stat-label"><i class="stat-icon">⚡</i>最快反应</div>
-                            <div class="stat-value" id="fastestTime">0ms</div>
+                    <div class="phase-stats">
+                        <h3>阶段统计</h3>
+                        <div class="stats-row">
+                            <div class="stat-item">
+                                <div class="stat-label"><i class="stat-icon">⚡</i>最快反应</div>
+                                <div class="stat-value" id="fastestTime">0ms</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label"><i class="stat-icon">⏱️</i>最慢反应</div>
+                                <div class="stat-value" id="slowestTime">0ms</div>
+                            </div>
                         </div>
-                        <div class="stat-item">
-                            <div class="stat-label"><i class="stat-icon">⏱️</i>最慢反应</div>
-                            <div class="stat-value" id="slowestTime">0ms</div>
-                        </div>
-                    </div>
-                    <div class="stats-row">
-                        <div class="stat-item">
-                            <div class="stat-label"><i class="stat-icon">🎯</i>准确率</div>
-                            <div class="stat-value" id="accuracy">0%</div>
-                            <div class="stat-detail">正确: 0 | 错误: 0</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-label"><i class="stat-icon">🔢</i>总测试次数</div>
-                            <div class="stat-value" id="totalTests">0</div>
+                        <div class="stats-row">
+                            <div class="stat-item">
+                                <div class="stat-label"><i class="stat-icon">🎯</i>准确率</div>
+                                <div class="stat-value" id="accuracy">0%</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label"><i class="stat-icon">🔢</i>总测试次数</div>
+                                <div class="stat-value" id="totalTests">0</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -566,21 +839,30 @@
             </div>
         </div>
         <div class="game-info">
-            <div class="info-item">
-                <div class="info-label"><i class="stat-icon">🎯</i>剩余轮数</div>
-                <div class="info-value" id="timeDisplay">30</div>
+            <div class="info-item single-phase">
+                <div class="info-label">
+                    <span>单键阶段</span>
+                    <span class="phase-indicator">剩余 <span id="singlePhaseDisplay">10</span> 轮</span>
+                </div>
+                <div class="info-value phase-rounds">-</div>
             </div>
-            <div class="info-item">
-                <div class="info-label"><i class="stat-icon">⚡</i>平均反应</div>
-                <div class="info-value" id="avgReactionDisplay">0ms</div>
+            <div class="info-item double-phase">
+                <div class="info-label">
+                    <span>双键阶段</span>
+                    <span class="phase-indicator">剩余 <span id="doublePhaseDisplay">10</span> 轮</span>
+                </div>
+                <div class="info-value phase-rounds">-</div>
+            </div>
+            <div class="info-item triple-phase">
+                <div class="info-label">
+                    <span>三键阶段</span>
+                    <span class="phase-indicator">剩余 <span id="triplePhaseDisplay">10</span> 轮</span>
+                </div>
+                <div class="info-value phase-rounds">-</div>
             </div>
             <div class="info-item">
                 <div class="info-label"><i class="stat-icon">🎯</i>准确率</div>
                 <div class="info-value" id="accuracyDisplay">0%</div>
-            </div>
-            <div class="info-item">
-                <div class="info-label"><i class="stat-icon">🔢</i>测试次数</div>
-                <div class="info-value" id="testsDisplay">0</div>
             </div>
         </div>
     </div>
