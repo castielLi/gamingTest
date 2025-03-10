@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>电竞天赋测试 - 探索孩子的数字未来</title>
+    <link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="nav">
+        <div class="nav-container">
+            <div class="nav-logo">电竞天赋测试</div>
+            <div class="nav-links">
+                <a href="#path" class="nav-link">电竞之路</a>
+                <a href="#stories" class="nav-link">成功案例</a>
+                <a href="#requirements" class="nav-link">能力要求</a>
+                <div class="user-section">
+                    <a href="views/login/index.html" class="login-btn">登录</a>
+                    <a href="views/games/shootgame/index.html" class="cta-button">开始测试</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 登录模态框 -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>用户登录</h2>
+                <button class="close-btn" onclick="closeLoginModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="loginForm" onsubmit="return handleLogin(event)">
+                    <div class="form-group">
+                        <input type="text" id="username" placeholder="用户名/手机号" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" id="password" placeholder="密码" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="submit-btn">登录</button>
+                        <button type="button" class="register-btn" onclick="showRegisterModal()">注册账号</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- 注册模态框 -->
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>用户注册</h2>
+                <button class="close-btn" onclick="closeRegisterModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="register-qr">
+                    <div class="qr-container">
+                        <!-- 预留二维码位置 -->
+                        <div class="qr-placeholder">
+                            [等待添加：微信二维码]
+                        </div>
+                    </div>
+                    <p class="qr-tip">请使用微信扫描二维码完成注册</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero部分 -->
+    <section class="hero">
+        <div class="hero-background">
+            <!-- 预留背景图位置 -->
+        </div>
+        <div class="hero-content fade-in">
+            <h1>发掘天赋<br>成就未来</h1>
+            <p>在这个数字化时代，电竞不仅是游戏，更是一个充满机遇的职业选择。<br>让我们用科学的方法，发现孩子的潜能。</p>
+            <a href="#path" class="cta-button">了解更多</a>
+        </div>
+    </section>
+
+    <!-- 电竞之路部分 -->
+    <section id="path" class="esports-path">
+        <div class="path-content">
+            <div class="path-text fade-in">
+                <h2>一条充满挑战与机遇的道路</h2>
+                <p>电竞选手的成长之路，需要付出比高考更多的努力和坚持。这不仅是一场技术的较量，更是意志力和职业素养的考验。</p>
+                <p>但是，对于真正有天赋的孩子来说，这条路同样充满希望：</p>
+                <ul>
+                    <li>年薪百万的职业选手</li>
+                    <li>数千万粉丝的电竞主播</li>
+                    <li>享誉全球的职业战队</li>
+                    <li>蓬勃发展的电竞产业</li>
+                </ul>
+            </div>
+            <div class="path-image fade-in">
+                <!-- 预留图片位置：电竞比赛或训练场景 -->
+                <div style="background: #f5f5f7; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
+                    [等待添加：电竞场景图片]
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 成功案例部分 -->
+    <section id="stories" class="success-stories">
+        <div class="stories-slider fade-in">
+            <div class="story-card">
+                <!-- 预留位置：成功案例轮播 -->
+                <div class="story-image" style="background: #f5f5f7; display: flex; align-items: center; justify-content: center;">
+                    [等待添加：选手照片]
+                </div>
+                <div class="story-content">
+                    <h3>UZI：从网吧少年到电竞传奇</h3>
+                    <p>简单的故事介绍，点击了解更多...</p>
+                </div>
+            </div>
+            <div class="slider-controls">
+                <span class="slider-dot active"></span>
+                <span class="slider-dot"></span>
+                <span class="slider-dot"></span>
+            </div>
+        </div>
+    </section>
+
+    <!-- 能力要求部分 -->
+    <section id="requirements" class="requirements">
+        <div class="requirements-grid">
+            <div class="requirement-card fade-in">
+                <div class="requirement-icon">⚡</div>
+                <h3>反应能力</h3>
+                <p>优秀的反应速度和手眼协调能力是电竞选手的基本要求</p>
+                <div style="margin-top: 20px; height: 200px; background: #f5f5f7; border-radius: 15px; display: flex; align-items: center; justify-content: center;">
+                    [等待添加：反应能力示意图]
+                </div>
+            </div>
+            <div class="requirement-card fade-in">
+                <div class="requirement-icon">🎯</div>
+                <h3>专注力</h3>
+                <p>持续的专注力和抗压能力是职业选手必备的心理素质</p>
+                <div style="margin-top: 20px; height: 200px; background: #f5f5f7; border-radius: 15px; display: flex; align-items: center; justify-content: center;">
+                    [等待添加：专注力示意图]
+                </div>
+            </div>
+            <div class="requirement-card fade-in">
+                <div class="requirement-icon">🧠</div>
+                <h3>战略思维</h3>
+                <p>快速的战术分析能力和团队协作精神缺一不可</p>
+                <div style="margin-top: 20px; height: 200px; background: #f5f5f7; border-radius: 15px; display: flex; align-items: center; justify-content: center;">
+                    [等待添加：战略思维示意图]
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA部分 -->
+    <section class="cta-section">
+        <div class="cta-content fade-in">
+            <h2>开启天赋测试之旅</h2>
+            <p>通过专业的测试系统，科学评估孩子的电竞潜力</p>
+            <p>为孩子的未来做出正确的选择</p>
+            <a href="views/games/shootgame/index.html" class="cta-button">立即开始测试</a>
+        </div>
+    </section>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html> 

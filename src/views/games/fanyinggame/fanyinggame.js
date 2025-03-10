@@ -339,18 +339,40 @@ class ReactionGame {
     }
     
     updateStats() {
-        // 获取当前阶段
-        const currentPhase = this.getCurrentPhase();
+        // 更新所有阶段的统计信息
+        ['single', 'double', 'triple'].forEach(phase => {
+            const correct = this.correctReactions[phase];
+            const wrong = this.wrongReactions[phase];
+            const total = correct + wrong;
+            const accuracy = total > 0 ? Math.round((correct / total) * 100) : 0;
+            
+            // 更新各阶段的显示
+            const phaseElement = document.querySelector(`.info-item.${phase}-phase`);
+            if (phaseElement) {
+                const accuracyDisplay = phaseElement.querySelector('.accuracy-value');
+                if (accuracyDisplay) accuracyDisplay.textContent = `${accuracy}%`;
+
+                // 更新进度显示
+                const phaseDisplay = document.getElementById(`${phase}PhaseDisplay`);
+                if (phaseDisplay) {
+                    const phaseConfig = this.gamePhases[phase];
+                    const currentPhaseRounds = this.currentRound + 1 >= phaseConfig.start ? 
+                        Math.min(this.currentRound + 1, phaseConfig.end) - phaseConfig.start + 1 : 0;
+                    phaseDisplay.textContent = currentPhaseRounds;
+                }
+            }
+        });
         
-        // 计算当前阶段的准确率
-        const correct = this.correctReactions[currentPhase];
-        const wrong = this.wrongReactions[currentPhase];
-        const total = correct + wrong;
-        const accuracy = total > 0 ? Math.round((correct / total) * 100) : 0;
+        // 更新总体统计
+        const totalCorrect = Object.values(this.correctReactions).reduce((a, b) => a + b, 0);
+        const totalWrong = Object.values(this.wrongReactions).reduce((a, b) => a + b, 0);
+        const totalTests = totalCorrect + totalWrong;
+        const totalAccuracy = totalTests > 0 ? Math.round((totalCorrect / totalTests) * 100) : 0;
         
-        // 更新显示
-        if (this.accuracyDisplay) this.accuracyDisplay.textContent = `${accuracy}%`;
-        if (this.testsDisplay) this.testsDisplay.textContent = total;
+        if (this.accuracyDisplay) {
+            this.accuracyDisplay.textContent = `${totalAccuracy}%`;
+            this.testsDisplay.textContent = `${this.currentRound + 1}/${this.totalRounds}`;
+        }
     }
     
     // 获取反应时间等级

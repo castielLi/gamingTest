@@ -109,21 +109,65 @@
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
+        .info-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
         .info-label {
-            font-size: 16px;
-            margin-bottom: 8px;
+            font-size: 14px;
             color: #bdc3c7;
             font-weight: 500;
             letter-spacing: 1px;
-            text-transform: uppercase;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .info-value {
+        .phase-indicator {
+            font-size: 28px;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .info-item.single-phase .phase-indicator { color: #2ecc71; }
+        .info-item.double-phase .phase-indicator { color: #e67e22; }
+        .info-item.triple-phase .phase-indicator { color: #e74c3c; }
+
+        .phase-progress {
+            font-size: 13px;
+            color: #95a5a6;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .total-stats {
+            text-align: center;
+            padding: 15px;
+            background: rgba(52, 73, 94, 0.7);
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .total-accuracy {
             font-size: 32px;
             font-weight: 700;
             color: #3498db;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-            transition: all 0.3s ease;
+            margin-bottom: 5px;
+        }
+
+        .total-progress {
+            font-size: 13px;
+            color: #95a5a6;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            display: inline-block;
         }
 
         .game-title {
@@ -684,7 +728,7 @@
             transition: all 0.3s ease;
         }
 
-        .info-item.single-phase { border-left: 3px solid #3498db; }
+        .info-item.single-phase { border-left: 3px solid #2ecc71; }
         .info-item.double-phase { border-left: 3px solid #e67e22; }
         .info-item.triple-phase { border-left: 3px solid #e74c3c; }
 
@@ -841,28 +885,25 @@
         <div class="game-info">
             <div class="info-item single-phase">
                 <div class="info-label">
-                    <span>单键阶段</span>
-                    <span class="phase-indicator">剩余 <span id="singlePhaseDisplay">10</span> 轮</span>
+                    单键阶段 <span class="phase-progress"><span id="singlePhaseDisplay">0</span>/15</span>
                 </div>
-                <div class="info-value phase-rounds">-</div>
+                <div class="phase-indicator accuracy-value">0%</div>
             </div>
             <div class="info-item double-phase">
                 <div class="info-label">
-                    <span>双键阶段</span>
-                    <span class="phase-indicator">剩余 <span id="doublePhaseDisplay">10</span> 轮</span>
+                    双键阶段 <span class="phase-progress"><span id="doublePhaseDisplay">0</span>/10</span>
                 </div>
-                <div class="info-value phase-rounds">-</div>
+                <div class="phase-indicator accuracy-value">0%</div>
             </div>
             <div class="info-item triple-phase">
                 <div class="info-label">
-                    <span>三键阶段</span>
-                    <span class="phase-indicator">剩余 <span id="triplePhaseDisplay">10</span> 轮</span>
+                    三键阶段 <span class="phase-progress"><span id="triplePhaseDisplay">0</span>/5</span>
                 </div>
-                <div class="info-value phase-rounds">-</div>
+                <div class="phase-indicator accuracy-value">0%</div>
             </div>
-            <div class="info-item">
-                <div class="info-label"><i class="stat-icon">🎯</i>准确率</div>
-                <div class="info-value" id="accuracyDisplay">0%</div>
+            <div class="info-item total-stats">
+                <div class="total-accuracy" id="accuracyDisplay">0%</div>
+                <div class="total-progress" id="testsDisplay">0/30</div>
             </div>
         </div>
     </div>
