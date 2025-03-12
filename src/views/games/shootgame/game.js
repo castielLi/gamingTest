@@ -339,7 +339,27 @@ class Game {
         
         this.isGameStarted = true;
         this.startScreen.style.display = 'none';
-        this.setupGame();
+        
+        // 添加倒计时逻辑
+        const countdownElement = document.querySelector('.countdown');
+        let count = 3;
+        
+        // 显示倒计时元素
+        countdownElement.textContent = count;
+        countdownElement.classList.add('show');
+        
+        const countdownInterval = setInterval(() => {
+            count--;
+            if (count > 0) {
+                countdownElement.textContent = count;
+            } else {
+                // 倒计时结束
+                clearInterval(countdownInterval);
+                countdownElement.classList.remove('show');
+                // 开始游戏
+                this.setupGame();
+            }
+        }, 1000);
     }
 
     pauseGame() {
@@ -1274,4 +1294,32 @@ class Game {
 // 启动游戏
 window.onload = () => {
     new Game();
-}; 
+};
+
+function startCountdown() {
+    const countdownElement = document.querySelector('.countdown');
+    let count = 3;
+    
+    // 显示倒计时元素
+    countdownElement.textContent = count;
+    countdownElement.classList.add('show');
+    
+    const countdownInterval = setInterval(() => {
+        count--;
+        if (count > 0) {
+            countdownElement.textContent = count;
+        } else {
+            // 倒计时结束
+            clearInterval(countdownInterval);
+            countdownElement.classList.remove('show');
+            // 这里开始真正的游戏
+            startGame();
+        }
+    }, 1000);
+}
+
+// 修改原来的开始游戏事件处理
+document.querySelector('.start-button').addEventListener('click', () => {
+    document.querySelector('.start-screen').style.display = 'none';
+    startCountdown(); // 先开始倒计时，而不是直接开始游戏
+}); 
