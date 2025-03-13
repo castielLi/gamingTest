@@ -98,19 +98,18 @@ class Game {
         // 游戏状态
         this.isGameStarted = false;
         this.isGameOver = false;
-        this.gameTime = 0;
-        this.lastTime = 0;
-        this.difficultyLevel = 1; // 难度等级
-        this.obstaclesPassed = 0; // 通过的障碍物数量
-        this.obstaclesForNextLevel = 40; // 升级所需的障碍物数量 (10组 * 4个障碍物)
-        this.isWaitingForUpgrade = false; // 是否等待升级
+        this.gameStartTime = 0;    // 添加游戏开始时间
+        this.obstaclesPassed = 0;  // 通过的障碍物数量
+        this.difficultyLevel = 1;
+        this.obstaclesForNextLevel = 40;
+        this.isWaitingForUpgrade = false;
         
         // 难度设置
         this.difficultySettings = {
-            1: { obstacleInterval: 1500, speed: 3, maxObstacles: 3 },
-            2: { obstacleInterval: 1200, speed: 4, maxObstacles: 4 },
-            3: { obstacleInterval: 1000, speed: 5, maxObstacles: 5 },
-            4: { obstacleInterval: 800, speed: 6, maxObstacles: 6 },
+            1: { obstacleInterval: 1300, speed: 3, maxObstacles: 3 },
+            2: { obstacleInterval: 1100, speed: 4, maxObstacles: 4 },
+            3: { obstacleInterval: 900, speed: 5, maxObstacles: 5 },
+            4: { obstacleInterval: 700, speed: 6, maxObstacles: 6 },
             5: { obstacleInterval: 600, speed: 7, maxObstacles: 7 },
             6: { obstacleInterval: 500, speed: 8, maxObstacles: 8 }
         };
@@ -252,10 +251,9 @@ class Game {
     initializeGame() {
         this.isGameStarted = true;
         this.isGameOver = false;
-        this.gameTime = 0;
-        this.lastTime = Date.now();
-        this.difficultyLevel = 1;
+        this.gameStartTime = Date.now();  // 记录游戏开始时间
         this.obstaclesPassed = 0;
+        this.difficultyLevel = 1;
         this.obstaclesForNextLevel = 40;
         this.isWaitingForUpgrade = false;
         this.obstacleInterval = this.difficultySettings[1].obstacleInterval;
@@ -263,14 +261,11 @@ class Game {
         // 重置两个玩家
         this.leftPlayer.isAlive = true;
         this.rightPlayer.isAlive = true;
-        this.leftPlayer.score = 0;
-        this.rightPlayer.score = 0;
         
         // 清空障碍物
         this.leftObstacles = [];
         this.rightObstacles = [];
         
-        this.updateScore();
         requestAnimationFrame(this.gameLoop);
     }
 
@@ -328,15 +323,14 @@ class Game {
 
     update() {
         const currentTime = Date.now();
-        const deltaTime = currentTime - this.lastTime;
-        this.lastTime = currentTime;
-
-        // 更新游戏时间
-        this.gameTime += deltaTime;
         
-        // 更新显示的通过组数（每4个障碍物算1组）
+        // 计算并显示游戏时间（秒）
+        const elapsedSeconds = Math.floor((currentTime - this.gameStartTime) / 1000);
+        document.getElementById('timeElapsed').textContent = `${elapsedSeconds}s`;
+        
+        // 计算并显示通过的障碍组数
         const passedGroups = Math.floor(this.obstaclesPassed / 4);
-        document.getElementById('timeDisplay').textContent = passedGroups;
+        document.getElementById('groupsPassed').textContent = passedGroups;
 
         // 检查是否需要升级难度
         if (this.obstaclesPassed >= this.obstaclesForNextLevel && 
@@ -383,9 +377,8 @@ class Game {
             // this.rightPlayer.drawCollisionBox(this.rightCtx);
         }
 
-        // 只检查与障碍物的碰撞导致的游戏结束
-        if (!this.leftPlayer.isAlive || !this.rightPlayer.isAlive || 
-            Math.floor((this.totalGameTime * 1000 - this.gameTime) / 1000) <= 0) {
+        // 只在飞机坠毁时结束游戏
+        if (!this.leftPlayer.isAlive || !this.rightPlayer.isAlive) {
             this.endGame();
         }
     }
@@ -401,13 +394,11 @@ class Game {
                 player.isAlive = false;
             }
 
-            // 移除超出画布的障碍物并增加分数
+            // 移除超出画布的障碍物并计数
             if (obstacle.isOffScreen(canvas.height)) {
                 obstacles.splice(i, 1);
                 if (player.isAlive) {
-                    player.score += 10;
-                    this.obstaclesPassed++; // 增加通过的障碍物计数
-                    this.updateScore();
+                    this.obstaclesPassed++;
                 }
             }
         }
@@ -421,13 +412,6 @@ class Game {
                bounds.x + bounds.width > obstacle.x &&
                bounds.y < obstacle.y + obstacle.height &&
                bounds.y + bounds.height > obstacle.y;
-    }
-
-    updateScore() {
-        // 更新总分（两边分数之和）
-        const totalScore = this.leftPlayer.score + this.rightPlayer.score;
-        document.getElementById('player1Score').textContent = this.leftPlayer.score;
-        document.getElementById('player2Score').textContent = this.rightPlayer.score;
     }
 
     increaseDifficulty() {
@@ -448,51 +432,24 @@ class Game {
     }
 
     showDifficultyUpgrade() {
-        const upgrade = document.createElement('div');
-        upgrade.className = 'difficulty-upgrade';
-        upgrade.innerHTML = `
-            <div class="upgrade-content">
-                <div class="upgrade-text">难度提升！</div>
-                <div class="upgrade-subtext">Level ${this.difficultyLevel}</div>
-            </div>
-        `;
-        
-        document.querySelector('.game-container').appendChild(upgrade);
-        
-        // 更新难度指示器
-        const indicator = document.querySelector('.difficulty-indicator') || 
-            document.createElement('div');
-        indicator.className = 'difficulty-indicator';
-        indicator.innerHTML = `
-            难度: <span class="difficulty-level">Level ${this.difficultyLevel}</span>
-        `;
-        
-        if (!document.querySelector('.difficulty-indicator')) {
-            document.querySelector('.game-container').appendChild(indicator);
-        }
-        
-        // 2秒后移除提示
-        setTimeout(() => {
-            upgrade.remove();
-        }, 2000);
+        // 移除难度提升的视觉提示，保持画布干净
+        this.obstacleInterval = this.difficultySettings[this.difficultyLevel].obstacleInterval;
     }
 
     endGame() {
         this.isGameOver = true;
         this.isGameStarted = false;
         
-        const totalScore = this.leftPlayer.score + this.rightPlayer.score;
         const passedGroups = Math.floor(this.obstaclesPassed / 4);
+        const elapsedSeconds = Math.floor((Date.now() - this.gameStartTime) / 1000);
+        
         const gameOver = document.createElement('div');
         gameOver.className = 'start-screen';
         gameOver.innerHTML = `
             <div class="game-title">游戏结束</div>
             <div class="final-scores">
-                <div>左侧得分: ${this.leftPlayer.score}</div>
-                <div>右侧得分: ${this.rightPlayer.score}</div>
-                <div>总分: ${totalScore}</div>
                 <div>通过障碍组数: ${passedGroups}组</div>
-                <div>最高难度: Level ${this.difficultyLevel}</div>
+                <div>坚持时间: ${elapsedSeconds}秒</div>
             </div>
             <button class="start-button">再来一次</button>
         `;
