@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>颜色反应挑战</title>
+    <title>记忆配对挑战</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
         
@@ -49,6 +49,60 @@
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
+        .game-board {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(4, 1fr);
+            gap: 15px;
+            padding: 20px;
+            perspective: 1000px;
+        }
+
+        .card {
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            cursor: pointer;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card.matched {
+            transform: rotateY(180deg);
+            box-shadow: 0 0 15px rgba(46, 204, 113, 0.8);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2.5rem;
+            font-weight: bold;
+            user-select: none;
+        }
+
+        .card-front {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .card-back {
+            background: rgba(44, 62, 80, 0.8);
+            transform: rotateY(180deg);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
         .game-info {
             background: rgba(44, 62, 80, 0.8);
             border-radius: 15px;
@@ -62,7 +116,6 @@
             min-width: 200px;
             box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
             border: 1px solid rgba(255, 255, 255, 0.05);
-            margin-left: 20px;
         }
 
         .info-item {
@@ -91,48 +144,6 @@
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
-        .game-main {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .timer-bar {
-            height: 4px;
-            background: #2ecc71;
-            width: 100%;
-            transition: width 0.1s linear;
-            border-radius: 2px;
-            box-shadow: 0 0 10px rgba(46, 204, 113, 0.4);
-        }
-
-        .game-board {
-            flex: 1;
-            position: relative;
-            padding: 20px;
-            background: rgba(44, 62, 80, 0.3);
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .ball {
-            position: absolute;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: transform 0.2s;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .ball:hover {
-            transform: scale(1.1);
-            z-index: 1;
-        }
-
         .start-screen {
             position: absolute;
             top: 50%;
@@ -145,6 +156,7 @@
             z-index: 100;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             border: 1px solid rgba(255, 255, 255, 0.1);
+            min-width: 350px;
         }
 
         .game-title {
@@ -161,6 +173,28 @@
             font-size: 16px;
         }
 
+        .difficulty-selector {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .difficulty-btn {
+            background: rgba(52, 73, 94, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 8px 15px;
+            border-radius: 5px;
+            color: #bdc3c7;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .difficulty-btn:hover, .difficulty-btn.selected {
+            background: rgba(52, 152, 219, 0.7);
+            color: white;
+        }
+
         .start-button {
             background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
             border: none;
@@ -172,45 +206,86 @@
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+            margin-top: 20px;
         }
 
         .start-button:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(52, 152, 219, 0.6);
         }
+
+        .level-complete {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(46, 204, 113, 0.9);
+            padding: 20px 40px;
+            border-radius: 10px;
+            text-align: center;
+            z-index: 100;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            transition: all 0.5s ease;
+            pointer-events: none;
+        }
+
+        .level-complete.show {
+            opacity: 1;
+            animation: pulse 1s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1.05);
+            }
+        }
     </style>
 </head>
 <body>
     <div class="game-wrapper">
         <div class="game-container">
-            <div class="timer-bar"></div>
             <div class="game-board" id="gameBoard"></div>
-            <div class="start-screen">
-                <div class="game-title">颜色反应挑战</div>
+            <div class="level-complete" id="levelComplete">
+                <h2>关卡完成!</h2>
+            </div>
+            <div class="start-screen" id="startScreen">
+                <div class="game-title">记忆配对挑战</div>
                 <div class="game-instructions">
-                    在限定时间内找出出现次数最少的颜色球并点击。<br>
-                    点错或超时都会导致游戏结束。<br>
-                    每个难度需要完成3轮才能晋级。<br>
-                    准备好了吗？
+                    翻开卡片，找到所有匹配的对子。<br>
+                    尝试用最少的步数完成游戏！<br>
+                    选择难度开始游戏：
                 </div>
-                <button class="start-button">开始游戏</button>
+                <div class="difficulty-selector">
+                    <div class="difficulty-btn" data-difficulty="easy">简单</div>
+                    <div class="difficulty-btn selected" data-difficulty="medium">中等</div>
+                    <div class="difficulty-btn" data-difficulty="hard">困难</div>
+                </div>
+                <button class="start-button" id="startButton">开始游戏</button>
             </div>
         </div>
         <div class="game-info">
             <div class="info-item">
+                <div class="info-label">当前关卡</div>
+                <div class="info-value" id="currentLevel">1</div>
+            </div>
+            <div class="info-item">
                 <div class="info-label">剩余时间</div>
-                <div class="info-value" id="timeLeft">2.0</div>
+                <div class="info-value" id="timeLeft">60</div>
             </div>
             <div class="info-item">
-                <div class="info-label">当前进度</div>
-                <div class="info-value" id="currentLevel">1-1</div>
+                <div class="info-label">翻牌次数</div>
+                <div class="info-value" id="moves">0</div>
             </div>
             <div class="info-item">
-                <div class="info-label">最高记录</div>
-                <div class="info-value" id="highScore">0</div>
+                <div class="info-label">已匹配</div>
+                <div class="info-value" id="matched">0/8</div>
             </div>
         </div>
     </div>
-    <script src="braingame.js"></script>
+    <script src="matchgame.js"></script>
 </body>
 </html>

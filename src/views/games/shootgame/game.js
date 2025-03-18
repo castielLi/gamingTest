@@ -187,42 +187,37 @@ class Game {
         this.isGameStarted = false;
         this.isPaused = false;
         
-        // 最小尺寸要求
-        this.minWidth = 800;
-        this.minHeight = 600;
-        
         // 获取DOM元素
-        this.sizeWarning = document.querySelector('.size-warning');
         this.startScreen = document.querySelector('.start-screen');
         this.startButton = document.querySelector('.start-button');
         this.gameOverScreen = document.querySelector('.game-over');
         this.retryButton = document.querySelector('.retry-button');
+        this.fullscreenWarning = document.querySelector('.fullscreen-warning');
+        this.fullscreenButton = document.querySelector('.fullscreen-button');
         
         // 绑定事件
         this.startButton.addEventListener('click', () => this.startGame());
         this.retryButton.addEventListener('click', () => this.restartGame());
+        this.fullscreenButton.addEventListener('click', () => this.enterFullscreen());
         
-        // 添加重置标志
-        this.needsReset = false;
+        // 检查初始窗口状态
+        this.checkWindowState();
+        
+        // 监听全屏变化
+        document.addEventListener('fullscreenchange', () => this.handleFullscreenChange());
+        document.addEventListener('webkitfullscreenchange', () => this.handleFullscreenChange());
+        document.addEventListener('mozfullscreenchange', () => this.handleFullscreenChange());
+        document.addEventListener('MSFullscreenChange', () => this.handleFullscreenChange());
         
         // 修改窗口大小变化监听
         window.addEventListener('resize', () => {
-            // 如果游戏已经开始，则需要重置
-            if (this.isGameStarted) {
-                this.handleResize();
-            } else {
-                this.checkSize();
-                if (!this.isTooSmall) {
-                    this.resizeCanvas();
-                }
-            }
+            this.resizeCanvas();
+            this.checkWindowState();
         });
         
         // 初始化画布
-        if (!this.isTooSmall) {
-            this.resizeCanvas();
-            this.canvas.addEventListener('click', (e) => this.handleClick(e));
-        }
+        this.resizeCanvas();
+        this.canvas.addEventListener('click', (e) => this.handleClick(e));
         
         // 添加粒子系统
         this.particles = [];
@@ -267,9 +262,6 @@ class Game {
         this.fastHits = 0;          // 快速命中次数
         this.normalHits = 0;        // 普通命中次数
         
-        // 添加精准度显示元素
-        this.createAccuracyDisplay();
-        
         // 添加浮动分数数组
         this.floatingScores = [];
         
@@ -311,31 +303,113 @@ class Game {
         }
     }
 
-    checkSize() {
-        const wrapper = document.querySelector('.game-wrapper');
-        const windowTooSmall = window.innerWidth < this.minWidth || window.innerHeight < this.minHeight;
-        
-        if (windowTooSmall) {
-            this.sizeWarning.style.display = 'flex';
-            wrapper.style.display = 'none';
-            this.isTooSmall = true;
-            
-            if (this.isGameStarted) {
-                this.pauseGame();
-            }
+    resizeCanvas() {
+        const gameContainer = document.querySelector('.game-container');
+        const availableWidth = gameContainer.clientWidth - 40;
+        const availableHeight = gameContainer.clientHeight - 40;
+
+        let width, height;
+        const aspectRatio = 4/3;
+
+        if (availableWidth / availableHeight > aspectRatio) {
+            height = Math.min(availableHeight, window.innerHeight * 0.7);
+            width = height * aspectRatio;
         } else {
-            this.sizeWarning.style.display = 'none';
-            wrapper.style.display = 'flex';
-            this.isTooSmall = false;
-            
-            if (this.isGameStarted && this.isPaused) {
-                this.resumeGame();
-            }
+            width = Math.min(availableWidth, window.innerWidth * 0.7);
+            height = width / aspectRatio;
+        }
+
+        this.canvas.width = width;
+        this.canvas.height = height;
+        this.canvas.style.width = `${width}px`;
+        this.canvas.style.height = `${height}px`;
+
+        const border = document.querySelector('.game-border');
+        if (border) {
+            border.style.width = `${width}px`;
+            border.style.height = `${height}px`;
+        }
+
+        this.scale = Math.min(width, height) / 800;
+    }
+
+    checkWindowState() {
+        // 获取当前窗口尺寸
+        const currentWidth = window.innerWidth;
+        const currentHeight = window.innerHeight;
+        
+        // 获取屏幕尺寸
+        const screenWidth = window.screen.availWidth;
+        const screenHeight = window.screen.availHeight;
+        
+        // 计算窗口与屏幕的比例
+        const widthRatio = currentWidth / screenWidth;
+        const heightRatio = currentHeight / screenHeight;
+        
+        // 如果窗口尺寸达到屏幕可用尺寸的85%以上，认为是最大化状态
+        const isMaximized = widthRatio >= 0.85 && heightRatio >= 0.85;
+        
+        if (!isMaximized && !document.fullscreenElement) {
+            this.showFullscreenWarning();
+        } else {
+            this.hideFullscreenWarning();
+        }
+    }
+
+    showFullscreenWarning() {
+        if (this.fullscreenWarning) {
+            this.fullscreenWarning.style.display = 'flex';
+        }
+    }
+
+    hideFullscreenWarning() {
+        if (this.fullscreenWarning) {
+            this.fullscreenWarning.style.display = 'none';
+        }
+    }
+
+    enterFullscreen() {
+        const element = document.documentElement;
+        
+        if (element.requestFullscreen) {
+            element.requestFullscreen();
+        } else if (element.webkitRequestFullscreen) { // Chrome, Safari
+            element.webkitRequestFullscreen();
+        } else if (element.msRequestFullscreen) { // IE11
+            element.msRequestFullscreen();
+        } else if (element.mozRequestFullScreen) { // Firefox
+            element.mozRequestFullScreen();
+        }
+    }
+
+    handleFullscreenChange() {
+        if (!document.fullscreenElement && 
+            !document.webkitFullscreenElement && 
+            !document.mozFullScreenElement && 
+            !document.msFullscreenElement) {
+            // 退出全屏时检查窗口状态
+            this.checkWindowState();
+        } else {
+            // 进入全屏时隐藏提示
+            this.hideFullscreenWarning();
         }
     }
 
     startGame() {
-        if (this.isTooSmall) return;
+        // 检查窗口状态
+        const currentWidth = window.innerWidth;
+        const currentHeight = window.innerHeight;
+        const screenWidth = window.screen.availWidth;
+        const screenHeight = window.screen.availHeight;
+        const widthRatio = currentWidth / screenWidth;
+        const heightRatio = currentHeight / screenHeight;
+        const isMaximized = widthRatio >= 0.85 && heightRatio >= 0.85;
+        
+        // 只有在窗口未最大化且未全屏时才显示提示
+        if (!isMaximized && !document.fullscreenElement) {
+            this.showFullscreenWarning();
+            return;
+        }
         
         this.isGameStarted = true;
         this.startScreen.style.display = 'none';
@@ -378,43 +452,9 @@ class Game {
     }
 
     restartGame() {
-        if (this.isTooSmall) return;
-        
         this.gameOverScreen.style.display = 'none';
         this.isGameOver = false;
         this.startGame();
-    }
-
-    resizeCanvas() {
-        if (this.isTooSmall) return;
-
-        const gameContainer = document.querySelector('.game-container');
-        const availableWidth = gameContainer.clientWidth - 40;
-        const availableHeight = gameContainer.clientHeight - 40;
-
-        let width, height;
-        const aspectRatio = 4/3;
-
-        if (availableWidth / availableHeight > aspectRatio) {
-            height = Math.min(availableHeight, window.innerHeight * 0.7);
-            width = height * aspectRatio;
-        } else {
-            width = Math.min(availableWidth, window.innerWidth * 0.7);
-            height = width / aspectRatio;
-        }
-
-        this.canvas.width = width;
-        this.canvas.height = height;
-        this.canvas.style.width = `${width}px`;
-        this.canvas.style.height = `${height}px`;
-
-        const border = document.querySelector('.game-border');
-        if (border) {
-            border.style.width = `${width}px`;
-            border.style.height = `${height}px`;
-        }
-
-        this.scale = Math.min(width, height) / 800;
     }
 
     setupGame() {
@@ -998,16 +1038,19 @@ class Game {
         if (windowTooSmall) {
             // 如果太小，直接显示警告并重置游戏
             this.sizeWarning.style.display = 'flex';
-            document.querySelector('.game-wrapper').style.display = 'none';
-            this.resetGame();
-        } else {
-            // 如果尺寸足够，但游戏正在进行，显示确认对话框
-            if (this.isGameStarted && !this.isGameOver) {
+            wrapper.style.display = 'none';
+            this.isTooSmall = true;
+            
+            if (this.isGameStarted) {
                 this.pauseGame();
-                this.showResizeConfirmation();
-            } else {
-                this.checkSize();
-                this.resizeCanvas();
+            }
+        } else {
+            this.sizeWarning.style.display = 'none';
+            wrapper.style.display = 'flex';
+            this.isTooSmall = false;
+            
+            if (this.isGameStarted && this.isPaused) {
+                this.resumeGame();
             }
         }
     }
@@ -1076,10 +1119,9 @@ class Game {
         this.totalShots = 0;
         this.hitShots = 0;
         this.accuracy = 0;
-        this.accuracyDisplay.textContent = '0%';
-        this.hitShotsDisplay.textContent = '0';
-        this.totalShotsDisplay.textContent = '0';
-        this.accuracyDisplay.style.color = '#3498db';
+        document.getElementById('accuracyDisplay').textContent = '0%';
+        document.querySelector('.accuracy-details').textContent = '命中: 0 | 失误: 0';
+        document.getElementById('accuracyDisplay').style.color = '#3498db';
         
         // 清除浮动分数
         this.floatingScores = [];
@@ -1097,26 +1139,6 @@ class Game {
         document.getElementById('scoreDisplay').textContent = `0${this.scoreUnit}`;
     }
 
-    createAccuracyDisplay() {
-        // 在游戏信息区域添加精准度显示
-        const gameInfo = document.querySelector('.game-info');
-        const accuracyItem = document.createElement('div');
-        accuracyItem.className = 'info-item';
-        accuracyItem.innerHTML = `
-            <div class="info-label">精准度</div>
-            <div class="info-value" id="accuracyDisplay">0%</div>
-            <div class="accuracy-details">
-                <span id="hitShotsDisplay">0</span> / <span id="totalShotsDisplay">0</span>
-            </div>
-        `;
-        gameInfo.appendChild(accuracyItem);
-
-        // 保存DOM引用
-        this.accuracyDisplay = document.getElementById('accuracyDisplay');
-        this.hitShotsDisplay = document.getElementById('hitShotsDisplay');
-        this.totalShotsDisplay = document.getElementById('totalShotsDisplay');
-    }
-
     updateAccuracy(isHit) {
         this.totalShots++;
         if (isHit) {
@@ -1127,12 +1149,14 @@ class Game {
         this.accuracy = (this.hitShots / this.totalShots) * 100;
         
         // 更新显示
-        this.accuracyDisplay.textContent = `${this.accuracy.toFixed(1)}%`;
-        this.hitShotsDisplay.textContent = this.hitShots;
-        this.totalShotsDisplay.textContent = this.totalShots;
+        const accuracyDisplay = document.getElementById('accuracyDisplay');
+        const accuracyDetails = document.querySelector('.accuracy-details');
+        
+        accuracyDisplay.textContent = `${this.accuracy.toFixed(1)}%`;
+        accuracyDetails.textContent = `命中: ${this.hitShots} | 失误: ${this.totalShots - this.hitShots}`;
         
         // 根据精准度改变颜色
-        this.accuracyDisplay.style.color = this.getAccuracyColor(this.accuracy);
+        accuracyDisplay.style.color = this.getAccuracyColor(this.accuracy);
     }
 
     getAccuracyColor(accuracy) {

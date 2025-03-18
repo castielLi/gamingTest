@@ -6,11 +6,56 @@ class BrainGame {
             timeIncrement: 300,  // 每个难度增加0.3秒
             roundsPerLevel: 3,   // 每个难度需要通过的轮数
             levels: [
-                { balls: 6, colors: 3 },   // 第1难度：6个球
-                { balls: 10, colors: 3 },  // 第2难度：10个球
-                { balls: 14, colors: 3 },  // 第3难度：14个球
-                { balls: 17, colors: 3 },  // 第4难度：17个球
-                { balls: 20, colors: 3 }   // 第5难度：20个球
+                { 
+                    balls: 9,    // 修改为9个球以便有更好的分配组合
+                    colors: 3,
+                    combinations: [
+                        [2, 3, 4],
+                        [1, 3, 5],
+                        [2, 4, 3],
+                        [1, 4, 4]  // 这个组合确保最小值唯一
+                    ]
+                },
+                { 
+                    balls: 12,   // 修改为12个球
+                    colors: 3,
+                    combinations: [
+                        [2, 4, 6],
+                        [3, 4, 5],
+                        [2, 5, 5],
+                        [1, 5, 6]
+                    ]
+                },
+                { 
+                    balls: 15,   // 修改为15个球
+                    colors: 3,
+                    combinations: [
+                        [3, 5, 7],
+                        [2, 6, 7],
+                        [4, 5, 6],
+                        [3, 4, 8]
+                    ]
+                },
+                { 
+                    balls: 18,   // 修改为18个球
+                    colors: 3,
+                    combinations: [
+                        [4, 6, 8],
+                        [3, 7, 8],
+                        [5, 6, 7],
+                        [2, 7, 9]
+                    ]
+                },
+                { 
+                    balls: 21,   // 修改为21个球
+                    colors: 3,
+                    combinations: [
+                        [5, 7, 9],
+                        [4, 8, 9],
+                        [6, 7, 8],
+                        [3, 8, 10]
+                    ]
+                }
             ],
             colors: [
                 '#e74c3c', // 红色
@@ -93,10 +138,9 @@ class BrainGame {
         
         // 获取当前关卡配置
         const levelConfig = this.config.levels[Math.min(this.currentLevel - 1, this.config.levels.length - 1)];
-        const totalBalls = levelConfig.balls;
         
         // 生成颜色分配
-        const colorCounts = this.generateValidColorDistribution(totalBalls);
+        const colorCounts = this.generateValidColorDistribution(levelConfig.balls);
         
         // 随机选择三种颜色
         const roundColors = this.shuffleArray([...this.config.colors]).slice(0, 3);
@@ -120,6 +164,11 @@ class BrainGame {
         const balls = [];
         const positions = [];
 
+        // 计算网格布局
+        const gridSize = Math.ceil(Math.sqrt(levelConfig.balls)); // 每行/列的球数
+        const cellWidth = boardWidth / gridSize;
+        const cellHeight = boardHeight / gridSize;
+
         Object.entries(finalColorCounts).forEach(([color, count]) => {
             for (let i = 0; i < count; i++) {
                 let position;
@@ -127,15 +176,15 @@ class BrainGame {
                 const maxAttempts = 50;
 
                 do {
+                    // 在网格单元格内随机位置
+                    const cellX = Math.floor(Math.random() * gridSize);
+                    const cellY = Math.floor(Math.random() * gridSize);
                     position = {
-                        x: Math.random() * boardWidth,
-                        y: Math.random() * boardHeight
+                        x: cellX * cellWidth + Math.random() * (cellWidth - 60),
+                        y: cellY * cellHeight + Math.random() * (cellHeight - 60)
                     };
                     attempts++;
-                    if (attempts >= maxAttempts) {
-                        // 如果尝试次数过多，增加最小间距的容忍度
-                        break;
-                    }
+                    if (attempts >= maxAttempts) break;
                 } while (this.checkOverlap(position, positions));
 
                 const ball = this.createBall(color);
@@ -164,35 +213,15 @@ class BrainGame {
 
     // 生成有效的颜色分配
     generateValidColorDistribution(totalBalls) {
-        // 计算可能的最小值范围（确保剩余球能够合理分配）
-        const maxPossibleMin = Math.floor(totalBalls / 4); // 最小值不超过总数的1/4
-        const minCount = Math.max(1, Math.min(maxPossibleMin, Math.floor(Math.random() * 3) + 2));
+        // 获取当前难度的预设组合
+        const levelConfig = this.config.levels[Math.min(this.currentLevel - 1, this.config.levels.length - 1)];
+        const combinations = levelConfig.combinations;
         
-        // 确保剩余球数足够分配给其他两种颜色
-        const remainingBalls = totalBalls - minCount;
+        // 随机选择一个组合
+        const selectedCombination = combinations[Math.floor(Math.random() * combinations.length)];
         
-        // 计算第二种颜色的数量（比最小值多1-3个）
-        const minSecondCount = minCount + 1;
-        const maxSecondCount = Math.min(remainingBalls - minSecondCount, minCount + 3);
-        const secondCount = Math.min(maxSecondCount, minSecondCount + Math.floor(Math.random() * 3));
-        
-        // 第三种颜色获得剩余的所有球
-        const thirdCount = totalBalls - minCount - secondCount;
-        
-        // 对三个数进行排序，确保它们是不同的值
-        const counts = [minCount, secondCount, thirdCount].sort((a, b) => a - b);
-        
-        // 如果有相等的值，稍微调整它们
-        if (counts[0] === counts[1]) {
-            counts[1] += 1;
-            counts[2] -= 1;
-        }
-        if (counts[1] === counts[2]) {
-            counts[1] -= 1;
-            counts[0] += 1;
-        }
-        
-        return this.shuffleArray([...counts]);
+        // 返回选中的组合
+        return this.shuffleArray([...selectedCombination]);
     }
 
     checkOverlap(newPos, existingPositions) {

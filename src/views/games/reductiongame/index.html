@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>还原游戏</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+        
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #1a2a3a 0%, #0f1923 100%);
+            font-family: 'Poppins', Arial, sans-serif;
+            overflow: hidden;
+            color: #ecf0f1;
+        }
+
+        .game-wrapper {
+            position: relative;
+            display: grid;
+            grid-template-columns: 1fr 220px;
+            gap: 15px;
+            background: rgba(52, 73, 94, 0.7);
+            border-radius: 20px;
+            padding: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            width: 90%;
+            height: 85%;
+            max-width: 1200px;
+            max-height: 700px;
+            margin: auto;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-sizing: border-box;
+        }
+
+        .game-container {
+            position: relative;
+            background: rgba(44, 62, 80, 0.6);
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+            gap: 10px;
+            overflow: hidden;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-sizing: border-box;
+        }
+
+        .right-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            height: 100%;
+            box-sizing: border-box;
+        }
+
+        .shape-controls {
+            background: rgba(44, 62, 80, 0.8);
+            border-radius: 15px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .controls-title {
+            text-align: center;
+            font-size: 16px;
+            font-weight: 600;
+            color: #3498db;
+            margin-bottom: 10px;
+        }
+
+        .shape-palette {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .game-board {
+            flex: 1;
+            position: relative;
+            background: rgba(44, 62, 80, 0.3);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            background-position: center center;
+        }
+
+        .shape {
+            position: absolute;
+            cursor: move;
+            transition: opacity 0.3s ease;
+            z-index: 1;
+        }
+
+        .shape.triangle {
+            width: 0;
+            height: 0;
+            border-left: 25px solid transparent;
+            border-right: 25px solid transparent;
+            border-bottom: 50px solid #f1c40f;
+            background-color: transparent !important;
+        }
+
+        .shape.square {
+            width: 50px;
+            height: 50px;
+            background-color: #e74c3c;
+        }
+
+        .shape.circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #3498db;
+        }
+
+        .shape.diamond {
+            width: 50px;
+            height: 50px;
+            transform: rotate(45deg);
+            background-color: #3498db;
+        }
+
+        .shape.star {
+            width: 50px;
+            height: 50px;
+            background: #3498db;
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+        }
+
+        .palette-shape {
+            width: 100%;
+            height: 50px;
+            cursor: grab;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(52, 73, 94, 0.7);
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .palette-shape:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
+        }
+
+        .palette-shape.selected {
+            box-shadow: 0 0 10px rgba(52, 152, 219, 0.8);
+            background: rgba(52, 152, 219, 0.3);
+        }
+
+        .palette-triangle {
+            width: 0;
+            height: 0;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-bottom: 40px solid #f1c40f;
+        }
+
+        .palette-square {
+            width: 40px;
+            height: 40px;
+            background-color: #e74c3c;
+        }
+
+        .palette-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #3498db;
+        }
+
+        .palette-diamond {
+            width: 30px;
+            height: 30px;
+            transform: rotate(45deg);
+            background-color: #3498db;
+        }
+
+        .palette-star {
+            width: 40px;
+            height: 40px;
+            background: #3498db;
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+        }
+
+        .game-info {
+            background: rgba(44, 62, 80, 0.8);
+            border-radius: 15px;
+            padding: 15px;
+            color: #ecf0f1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            flex: 1;
+        }
+
+        .info-item {
+            text-align: center;
+            padding: 10px;
+            background: rgba(52, 73, 94, 0.7);
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .info-label {
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: #bdc3c7;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .info-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #3498db;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .timer-bar {
+            height: 4px;
+            background: #2ecc71;
+            width: 100%;
+            transition: width 0.1s linear;
+            border-radius: 2px;
+            box-shadow: 0 0 10px rgba(46, 204, 113, 0.4);
+        }
+
+        .start-screen {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(44, 62, 80, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            z-index: 100;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            min-width: 350px;
+            max-width: 90%;
+        }
+
+        .game-title {
+            font-size: 28px;
+            color: #3498db;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .game-instructions {
+            margin: 20px 0;
+            line-height: 1.6;
+            color: #bdc3c7;
+            font-size: 16px;
+        }
+
+        .button {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+            margin-top: 15px;
+            width: 100%;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.6);
+        }
+
+        .button.submit {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4);
+        }
+
+        .button.submit:hover {
+            box-shadow: 0 8px 20px rgba(46, 204, 113, 0.6);
+        }
+
+        .button:disabled {
+            background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+            opacity: 0.7;
+        }
+
+        .countdown {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 120px;
+            font-weight: 700;
+            color: #3498db;
+            text-shadow: 0 0 20px rgba(52, 152, 219, 0.8);
+            z-index: 50;
+            opacity: 0;
+            transition: all 0.3s ease;
+            background: none;
+            pointer-events: none;
+            -webkit-text-stroke: 2px rgba(255, 255, 255, 0.2);
+        }
+
+        .countdown.show {
+            opacity: 1;
+            animation: countdownPulse 1s infinite alternate;
+        }
+
+        @keyframes countdownPulse {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+                text-shadow: 0 0 20px rgba(52, 152, 219, 0.8);
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1.1);
+                text-shadow: 0 0 30px rgba(52, 152, 219, 1);
+            }
+        }
+
+        .phase-indicator {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(52, 152, 219, 0.7);
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+            z-index: 10;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .level-indicator {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(52, 152, 219, 0.7);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+            z-index: 10;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .controls-hint {
+            font-size: 12px;
+            color: #bdc3c7;
+            text-align: center;
+            margin-top: 5px;
+        }
+
+        .size-warning {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(26, 37, 47, 0.98);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .warning-content {
+            background: rgba(52, 73, 94, 0.8);
+            padding: 35px;
+            border-radius: 20px;
+            color: #ecf0f1;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            max-width: 90%;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .warning-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: #f1c40f;
+            text-shadow: 0 2px 10px rgba(241, 196, 15, 0.5);
+        }
+
+        .warning-title {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #3498db;
+            font-weight: 700;
+        }
+
+        .warning-text {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .game-stats {
+            margin: 15px 0;
+            padding: 10px;
+            background: rgba(44, 62, 80, 0.7);
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .stats-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .stats-row:last-child {
+            margin-bottom: 0;
+        }
+        
+        .stat-item {
+            flex: 1;
+            padding: 12px;
+            background: rgba(52, 73, 94, 0.5);
+            border-radius: 8px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .stat-label {
+            color: #bdc3c7;
+            font-size: 16px;
+            margin-bottom: 5px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-weight: bold;
+            color: #3498db;
+            font-size: 24px;
+            margin-bottom: 5px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .stat-detail {
+            font-size: 12px;
+            color: #95a5a6;
+            width: 100%;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="size-warning" id="screenSizeWarning">
+        <div class="warning-content">
+            <div class="warning-icon">⚠️</div>
+            <div class="warning-title">窗口未最大化</div>
+            <div class="warning-text">
+                为了获得最佳游戏体验，建议将浏览器窗口最大化。<br>
+                点击下方按钮进入全屏模式。<br>
+                <button id="autoAdjustButton" class="button">进入全屏模式</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="game-wrapper">
+        <div class="game-container">
+            <div class="timer-bar" id="timerBar"></div>
+            <div class="game-board" id="gameBoard">
+                <div class="phase-indicator" id="phaseIndicator">观察阶段</div>
+                <div class="level-indicator" id="levelIndicator">关卡 1-1</div>
+                <div class="countdown" id="countdown">3</div>
+            </div>
+        </div>
+        
+        <div class="right-panel">
+            <div class="shape-controls">
+                <div class="controls-title">图形选择</div>
+                <div class="shape-palette" id="shapePalette">
+                    <div class="palette-shape" data-shape="triangle" draggable="true">
+                        <div class="palette-triangle"></div>
+                    </div>
+                    <div class="palette-shape" data-shape="square" draggable="true">
+                        <div class="palette-square"></div>
+                    </div>
+                    <div class="palette-shape" data-shape="circle" draggable="true">
+                        <div class="palette-circle"></div>
+                    </div>
+                </div>
+                <div class="controls-hint">拖动图形到画布上放置</div>
+                <div class="controls-hint">右键点击图形可删除</div>
+                <button class="button submit" id="submitButton" disabled>提交答案</button>
+            </div>
+            
+            <div class="game-info">
+                <div class="info-item">
+                    <div class="info-label">当前得分</div>
+                    <div class="info-value" id="currentScore">0</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">总得分</div>
+                    <div class="info-value" id="totalScore">0</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="start-screen" id="startScreen">
+            <div class="game-title">还原游戏</div>
+            <div class="game-instructions">
+                记住图形的位置，然后尝试还原它们！<br>
+                1. 观察阶段：图形会在画布中快速移动3秒<br>
+                2. 还原阶段：从右侧拖动图形到画布上放置<br>
+                <br>
+                共有4个难度，每个难度3轮，难度越高图形越多！<br>
+                提示：右键点击图形可以删除
+            </div>
+            <button class="button" id="startButton">开始游戏</button>
+        </div>
+    </div>
+
+    <script src="reductiongame.js"></script>
+    <script>
+        // 检查窗口状态
+        function checkWindowState() {
+            // 获取当前窗口尺寸
+            const currentWidth = window.innerWidth;
+            const currentHeight = window.innerHeight;
+            
+            // 获取屏幕尺寸
+            const screenWidth = window.screen.availWidth;
+            const screenHeight = window.screen.availHeight;
+            
+            // 计算窗口与屏幕的比例
+            const widthRatio = currentWidth / screenWidth;
+            const heightRatio = currentHeight / screenHeight;
+            
+            // 如果窗口尺寸达到屏幕可用尺寸的85%以上，认为是最大化状态
+            const isMaximized = widthRatio >= 0.85 && heightRatio >= 0.85;
+            
+            const gameWrapper = document.querySelector('.game-wrapper');
+            const sizeWarning = document.getElementById('screenSizeWarning');
+            
+            if (!isMaximized && !document.fullscreenElement) {
+                gameWrapper.style.display = 'none';
+                sizeWarning.style.display = 'flex';
+            } else {
+                gameWrapper.style.display = 'grid';
+                sizeWarning.style.display = 'none';
+            }
+        }
+
+        // 进入全屏
+        function enterFullscreen() {
+            const element = document.documentElement;
+            
+            if (element.requestFullscreen) {
+                element.requestFullscreen();
+            } else if (element.webkitRequestFullscreen) {
+                element.webkitRequestFullscreen();
+            } else if (element.msRequestFullscreen) {
+                element.msRequestFullscreen();
+            } else if (element.mozRequestFullScreen) {
+                element.mozRequestFullScreen();
+            }
+        }
+
+        // 处理全屏变化
+        function handleFullscreenChange() {
+            if (!document.fullscreenElement && 
+                !document.webkitFullscreenElement && 
+                !document.mozFullScreenElement && 
+                !document.msFullscreenElement) {
+                // 退出全屏时检查窗口状态
+                checkWindowState();
+            } else {
+                // 进入全屏时隐藏提示
+                document.getElementById('screenSizeWarning').style.display = 'none';
+                document.querySelector('.game-wrapper').style.display = 'grid';
+            }
+        }
+
+        // 绑定事件
+        window.addEventListener('load', checkWindowState);
+        window.addEventListener('resize', checkWindowState);
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+        document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+        document.addEventListener('MSFullscreenChange', handleFullscreenChange);
+
+        // 绑定自动调整按钮点击事件
+        document.getElementById('autoAdjustButton').addEventListener('click', enterFullscreen);
+    </script>
+</body>
+</html>
