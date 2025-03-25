@@ -697,366 +697,456 @@ h2 {
     }
 }
 
-/* 电竞新星部分优化 */
+/* 电竞新星部分 - 全新样式 */
 .esports-stars {
-    padding: 100px 0;
-}
-
-.esports-stars h2 {
-    text-align: center;
-}
-
-.subtitle {
-    font-size: 1.5rem;
-    color: rgba(255, 255, 255, 0.7);
-    text-align: center;
-    margin-top: 1rem;
-    font-weight: 500;
-}
-
-.stars-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 2rem;
-    margin: 3rem auto;
-    max-width: 1200px;
-}
-
-.star-card {
-    background: rgba(52, 152, 219, 0.1);
-    border-radius: 20px;
-    padding: 2rem;
-    transition: all 0.3s ease;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    min-height: 200px;
-}
-
-.star-card:hover {
-    transform: translateY(-10px);
-    background: rgba(52, 152, 219, 0.2);
-}
-
-.star-card h3 {
-    font-size: 2rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-    background: var(--highlight-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.salary {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: rgba(14, 165, 233, 0.9);
-}
-
-.abilities {
-    display: flex;
-    gap: 0.75rem;
-    flex-wrap: wrap;
-    margin-top: auto;
-}
-
-.abilities span {
-    background: rgba(46, 204, 113, 0.2);
-    padding: 0.5rem 0.75rem;
-    border-radius: 20px;
-    font-size: 0.9rem;
-    white-space: nowrap;
-}
-
-/* 第五部分：最终抉择 - 简化重设计 */
-.final-choice {
     padding: 120px 0;
+    position: relative;
     background: linear-gradient(to bottom,
         rgba(0, 0, 0, 0.3),
-        rgba(14, 165, 233, 0.03) 30%,
-        rgba(14, 165, 233, 0.03) 70%,
+        rgba(14, 165, 233, 0.05) 40%,
+        rgba(14, 165, 233, 0.05) 60%,
         rgba(0, 0, 0, 0.3)
     );
 }
 
-.path-title {
+.contrast-title {
     text-align: center;
     font-size: 3.5rem;
-    margin-bottom: 5rem;
-    position: relative;
+    font-weight: 800;
+    margin-bottom: 1rem;
     background: var(--heading-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
-.path-title::after {
-    content: '';
-    position: absolute;
-    bottom: -1rem;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100px;
-    height: 3px;
-    background: linear-gradient(90deg, transparent, var(--primary-glow), transparent);
+.subtitle {
+    text-align: center;
+    font-size: 1.75rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 4rem;
 }
 
-/* 新的路径对比布局 */
-.path-contrast {
+.emphasis-text {
+    color: var(--primary-glow);
+    font-weight: 700;
+}
+
+/* 对比面板容器 */
+.stars-contrast {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
     gap: 2rem;
-    margin-bottom: 5rem;
+    margin-bottom: 4rem;
 }
 
-/* 路径分支样式 */
-.path-branch {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    padding: 3rem 2rem;
+/* 对比面板样式 */
+.stars-contrast .contrast-panel {
     background: rgba(17, 24, 39, 0.6);
     border-radius: 24px;
+    overflow: hidden;
     border: 1px solid rgba(14, 165, 233, 0.1);
-    backdrop-filter: blur(8px);
-    transition: transform 0.3s ease;
-}
-
-.path-branch:hover {
-    transform: translateY(-10px);
-}
-
-/* 路径图标设计 */
-.path-icon {
-    width: 80px;
-    height: 80px;
-    background: linear-gradient(135deg, var(--primary-glow), var(--secondary-glow));
-    border-radius: 50%;
+    backdrop-filter: blur(10px);
     display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 1.5rem;
-    box-shadow: 0 0 20px rgba(14, 165, 233, 0.3);
+    flex-direction: column;
 }
 
-.branch-symbol {
-    font-size: 2.5rem;
+.stars-contrast .contrast-panel.rise {
+    box-shadow: 0 10px 30px rgba(14, 165, 233, 0.1);
+}
+
+.stars-contrast .contrast-panel.fall {
+    box-shadow: 0 10px 30px rgba(239, 68, 68, 0.05);
+}
+
+/* 面板标题样式 */
+.panel-header {
+    padding: 2rem;
+    text-align: center;
+    position: relative;
+}
+
+.stars-contrast .panel-header {
+    background: linear-gradient(to right, 
+        rgba(14, 165, 233, 0.05),
+        rgba(14, 165, 233, 0.1),
+        rgba(14, 165, 233, 0.05)
+    );
+}
+
+.stars-contrast .panel-header h3 {
+    font-size: 2.25rem;
     font-weight: 700;
-    color: #fff;
+    margin-bottom: 0.75rem;
 }
 
-/* 分支标题样式 */
-.branch-title {
-    font-size: 2.5rem;
-    font-weight: 800;
-    margin-bottom: 0.5rem;
-    background: var(--heading-gradient);
+.stars-contrast .contrast-panel.rise .panel-header h3 {
+    background: linear-gradient(45deg, #fff, var(--primary-glow));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
-.branch-metaphor {
-    font-size: 1.125rem;
-    color: var(--primary-glow);
-    margin-bottom: 2.5rem;
-    padding: 0.5rem 1.5rem;
-    background: rgba(14, 165, 233, 0.1);
-    border-radius: 20px;
-    display: inline-block;
+.stars-contrast .contrast-panel.fall .panel-header h3 {
+    background: linear-gradient(45deg, #fff, #ef4444);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
-/* 分支内容样式 */
-.branch-content {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 2.5rem;
+.header-decoration {
+    width: 60px;
+    height: 3px;
+    margin: 0 auto;
 }
 
-/* 原则列表样式 */
-.branch-principles {
+.stars-contrast .header-decoration {
+    background: linear-gradient(to right, transparent, var(--primary-glow), transparent);
+}
+
+/* 明星列表 */
+.stars-list {
+    padding: 0 2rem 2rem;
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
-    text-align: left;
-}
-
-.principle-item {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.principle-marker {
-    font-family: 'Monument Extended', sans-serif;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--primary-glow);
-    opacity: 0.8;
-    min-width: 40px;
-    text-align: center;
-}
-
-.principle-text {
-    font-size: 1.25rem;
-    font-weight: 500;
-    color: #fff;
     flex: 1;
 }
 
-/* 分支引用样式 */
-.branch-quote {
-    position: relative;
-    background: rgba(14, 165, 233, 0.05);
+/* 明星卡片样式 */
+.star-card {
+    background: rgba(17, 24, 39, 0.5);
     border-radius: 16px;
-    padding: 2rem;
-    margin-top: auto;
+    padding: 1.5rem;
+    transition: transform 0.3s ease;
+}
+
+.star-card:hover {
+    transform: translateY(-5px);
+}
+
+.stars-contrast .star-card {
     border: 1px solid rgba(14, 165, 233, 0.1);
 }
 
-.branch-quote p {
-    font-size: 1.25rem;
-    font-weight: 600;
-    font-style: italic;
-    line-height: 1.6;
-    position: relative;
-    z-index: 1;
+.stars-contrast .star-card:hover {
+    box-shadow: 0 10px 20px rgba(14, 165, 233, 0.1);
 }
 
-.branch-quote::before {
-    content: '"';
-    position: absolute;
-    top: 1rem;
-    left: 1rem;
-    font-size: 4rem;
-    color: var(--primary-glow);
-    opacity: 0.1;
-    line-height: 0;
-}
-
-/* 路径分割线样式 */
-.paths-divider {
-    position: relative;
+/* 明星头部信息 */
+.star-header {
     display: flex;
     align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.star-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.grayscale img {
+    filter: grayscale(100%);
+}
+
+.star-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.star-identity {
+    flex: 1;
+}
+
+.star-identity h4 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+}
+
+.stars-contrast .star-identity h4 {
+    color: var(--primary-glow);
+}
+
+.star-title {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* 明星信息样式 */
+.star-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.star-income {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.income-value {
+    font-weight: 700;
+    font-size: 1.75rem;
+    display: flex;
+    align-items: baseline;
+}
+
+.income-currency {
+    font-size: 1rem;
+    margin-right: 2px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.income-period {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.star-abilities {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
     justify-content: center;
 }
 
-.paths-divider::before {
-    content: '';
+.star-abilities span {
+    font-size: 0.875rem;
+    padding: 0.4rem 0.75rem;
+    border-radius: 20px;
+    background: rgba(14, 165, 233, 0.1);
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* 陨落选手样式 */
+.star-current {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.current-label {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.current-value {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #ef4444;
+}
+
+.star-quote {
+    font-style: italic;
+    text-align: center;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+    border-left: 2px solid rgba(239, 68, 68, 0.3);
+    padding-left: 0.75rem;
+    margin-top: 0.5rem;
+}
+
+/* 分隔线样式 */
+.contrast-divider {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.divider-line {
+    width: 2px;
+    height: 80px;
+    background: linear-gradient(to bottom, transparent, var(--primary-glow), transparent);
+}
+
+.divider-vs {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, var(--primary-glow), rgba(239, 68, 68, 0.7));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.25rem;
+    box-shadow: 0 0 15px rgba(14, 165, 233, 0.3);
+}
+
+/* 结论部分样式 */
+.stars-conclusion {
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.conclusion-container {
+    background: rgba(17, 24, 39, 0.6);
+    border-radius: 24px;
+    padding: 3rem 2rem;
+    border: 1px solid rgba(14, 165, 233, 0.1);
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.conclusion-lead {
+    font-size: 1.5rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.conclusion-emphasis {
+    font-weight: 700;
+    color: var(--primary-glow);
+}
+
+.key-factor {
+    position: relative;
+    margin: 1.5rem 0;
+}
+
+.key-word {
+    font-size: 4rem;
+    font-weight: 800;
+    background: linear-gradient(45deg, var(--primary-glow), #fff, var(--primary-glow));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    position: relative;
+    z-index: 2;
+    letter-spacing: 0.05em;
+}
+
+.key-glow {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 2px;
-    height: 70%;
-    background: linear-gradient(
-        to bottom,
-        transparent,
-        var(--primary-glow),
-        transparent
+    width: 180px;
+    height: 180px;
+    background: radial-gradient(
+        circle,
+        rgba(14, 165, 233, 0.3) 0%,
+        rgba(14, 165, 233, 0.1) 40%,
+        transparent 70%
     );
-}
-
-.vs-text {
-    width: 60px;
-    height: 60px;
-    background: linear-gradient(135deg, var(--primary-glow), var(--secondary-glow));
     border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
-    font-weight: 800;
-    color: #fff;
-    position: relative;
     z-index: 1;
-    box-shadow: 0 0 20px rgba(14, 165, 233, 0.3);
+    animation: pulse-glow 3s infinite alternate;
 }
 
-/* 为电竞路径添加微妙的视觉区分 */
-.path-branch.esports {
-    position: relative;
+@keyframes pulse-glow {
+    0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.7; }
+    100% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
 }
 
-.path-branch.esports::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 24px;
-    border: 1px solid rgba(14, 165, 233, 0.2);
-    pointer-events: none;
+.conclusion-note {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.7);
 }
 
-.path-branch.esports .branch-quote {
-    background: rgba(14, 165, 233, 0.07);
+.stat-text {
+    color: var(--primary-glow);
+    font-weight: 600;
 }
 
-/* 响应式布局调整 */
+/* 响应式调整 */
 @media (max-width: 1080px) {
-    .path-contrast {
+    .stars-contrast {
         grid-template-columns: 1fr;
         grid-template-rows: auto auto auto;
         gap: 3rem;
     }
     
-    .paths-divider {
-        height: 60px;
+    .contrast-divider {
+        flex-direction: row;
+        height: auto;
     }
     
-    .paths-divider::before {
-        width: 70%;
+    .divider-line {
+        width: 80px;
         height: 2px;
     }
 }
 
 @media (max-width: 768px) {
-    .branch-title {
+    .contrast-title {
+        font-size: 2.75rem;
+    }
+    
+    .subtitle {
+        font-size: 1.5rem;
+    }
+    
+    .panel-header h3 {
         font-size: 2rem;
     }
     
-    .path-icon {
-        width: 70px;
-        height: 70px;
+    .stars-list {
+        padding: 0 1.5rem 1.5rem;
     }
     
-    .branch-symbol {
-        font-size: 2rem;
+    .conclusion-lead {
+        font-size: 1.3rem;
     }
     
-    .principle-text {
-        font-size: 1.125rem;
-    }
-    
-    .branch-quote p {
-        font-size: 1.125rem;
+    .key-word {
+        font-size: 3.5rem;
     }
 }
 
 @media (max-width: 480px) {
-    .path-branch {
-        padding: 2rem 1.5rem;
+    .contrast-title {
+        font-size: 2.25rem;
     }
     
-    .branch-title {
+    .subtitle {
+        font-size: 1.25rem;
+    }
+    
+    .panel-header {
+        padding: 1.5rem;
+    }
+    
+    .panel-header h3 {
         font-size: 1.75rem;
     }
     
-    .branch-metaphor {
-        font-size: 1rem;
+    .stars-list {
+        padding: 0 1rem 1rem;
     }
     
-    .principle-marker {
+    .star-card {
+        padding: 1.25rem;
+    }
+    
+    .star-avatar {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .star-identity h4 {
         font-size: 1.25rem;
-        min-width: 30px;
     }
     
-    .principle-text {
-        font-size: 1rem;
+    .conclusion-lead {
+        font-size: 1.125rem;
     }
     
-    .branch-quote {
-        padding: 1.5rem;
+    .key-word {
+        font-size: 3rem;
+    }
+    
+    .key-glow {
+        width: 150px;
+        height: 150px;
     }
 }
 
@@ -1617,5 +1707,428 @@ img {
         width: 24px;
         height: 24px;
         font-size: 0.875rem;
+    }
+}
+
+/* 修复第四部分和第五部分冲突问题 */
+
+/* 1. 为第四部分的对比面板添加特定前缀，避免与第五部分混淆 */
+.path-contrast {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 2rem;
+    margin-bottom: 4rem;
+}
+
+/* 2. 重写第五部分路径对比特定样式，确保不受第四部分影响 */
+.path-branch {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 2.5rem 2rem;
+    background: rgba(17, 24, 39, 0.6);
+    border-radius: 24px;
+    border: 1px solid rgba(14, 165, 233, 0.1);
+    backdrop-filter: blur(8px);
+    transition: transform 0.3s ease;
+    z-index: 1;
+    position: relative;
+}
+
+.path-branch:hover {
+    transform: translateY(-10px);
+}
+
+.path-branch.gaokao, .path-branch.esports {
+    /* 确保这些特定类覆盖其他冲突样式 */
+    display: flex;
+    flex-direction: column;
+}
+
+/* 3. 修复第五部分分隔符样式 */
+.paths-divider {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: auto;
+    z-index: 1;
+}
+
+.paths-divider .vs-text {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-glow), var(--secondary-glow));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #fff;
+    box-shadow: 0 0 20px rgba(14, 165, 233, 0.3);
+    z-index: 2;
+}
+
+/* 4. 明确设置第五部分内部元素样式 */
+.branch-content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin-top: 1.5rem;
+}
+
+.branch-principles {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.branch-quote {
+    font-size: 1.25rem;
+    font-weight: 600;
+    text-align: center;
+    padding: 1.5rem;
+    border-radius: 16px;
+    background: rgba(14, 165, 233, 0.05);
+    border: 1px solid rgba(14, 165, 233, 0.1);
+    position: relative;
+    margin-top: auto;
+}
+
+/* 5. 修复轮播图容器在第五部分的样式 */
+.path-branch .branch-carousel {
+    width: 100%;
+    margin: 2rem 0;
+    position: relative;
+    order: 2; /* 确保轮播图在正确位置 */
+}
+
+/* 6. 确保第五部分图标不受影响 */
+.path-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--primary-glow), var(--secondary-glow));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 0 20px rgba(14, 165, 233, 0.3);
+    z-index: 1;
+    order: 1; /* 确保图标在顶部 */
+}
+
+/* 7. 修复响应式问题 */
+@media (max-width: 1080px) {
+    .path-contrast, .stars-contrast {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
+    
+    .paths-divider {
+        flex-direction: row;
+    }
+}
+
+/* 完全重写第五部分的关键样式，避免冲突 */
+
+/* 1. 修复路径标题 */
+.path-title {
+    text-align: center;
+    font-size: 3.5rem;
+    margin-bottom: 4rem;
+    position: relative;
+    background: var(--heading-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.path-title::after {
+    content: '';
+    position: absolute;
+    bottom: -1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--primary-glow), transparent);
+}
+
+/* 2. 修复整体容器 */
+.path-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 4rem;
+    position: relative;
+}
+
+/* 3. 修复路径对比容器 */
+.path-contrast {
+    display: grid !important;
+    grid-template-columns: 1fr auto 1fr !important;
+    gap: 2rem !important;
+    margin-bottom: 4rem !important;
+    width: 100% !important;
+}
+
+/* 4. 修复分支节点样式 */
+.path-branch {
+    background: rgba(17, 24, 39, 0.6) !important;
+    border-radius: 24px !important;
+    border: 1px solid rgba(14, 165, 233, 0.1) !important;
+    overflow: visible !important; /* 允许内容溢出，避免裁剪 */
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    padding: 2.5rem 2rem !important;
+    transition: transform 0.3s ease !important;
+    position: relative !important;
+    min-height: 500px !important; /* 确保最小高度 */
+}
+
+.path-branch:hover {
+    transform: translateY(-10px) !important;
+}
+
+/* 5. 修复分支图标 */
+.path-icon {
+    width: 80px !important;
+    height: 80px !important;
+    background: linear-gradient(135deg, var(--primary-glow), var(--secondary-glow)) !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-bottom: 1.5rem !important;
+    box-shadow: 0 0 20px rgba(14, 165, 233, 0.3) !important;
+    position: relative !important;
+    z-index: 2 !important;
+}
+
+.branch-symbol {
+    font-size: 2.5rem !important;
+    font-weight: 700 !important;
+    color: #fff !important;
+}
+
+/* 6. 修复分支标题 */
+.branch-title {
+    font-size: 2.5rem !important;
+    font-weight: 800 !important;
+    margin-bottom: 0.5rem !important;
+    background: var(--heading-gradient) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    position: relative !important;
+    z-index: 2 !important;
+}
+
+.branch-metaphor {
+    font-size: 1.125rem !important;
+    color: var(--primary-glow) !important;
+    margin-bottom: 2rem !important;
+    padding: 0.5rem 1.5rem !important;
+    background: rgba(14, 165, 233, 0.1) !important;
+    border-radius: 20px !important;
+    display: inline-block !important;
+    position: relative !important;
+    z-index: 2 !important;
+}
+
+/* 7. 修复轮播图容器 */
+.branch-carousel {
+    width: 100% !important;
+    margin: 2rem 0 !important;
+    position: relative !important;
+    z-index: 2 !important;
+}
+
+/* 8. 修复内容区域 */
+.branch-content {
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 2rem !important;
+    margin-top: 1.5rem !important;
+    position: relative !important;
+    z-index: 2 !important;
+}
+
+/* 9. 修复原则列表 */
+.branch-principles {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 1.5rem !important;
+    text-align: left !important;
+}
+
+.principle-item {
+    display: flex !important;
+    align-items: center !important;
+    gap: 1rem !important;
+}
+
+.principle-marker {
+    font-family: 'Monument Extended', sans-serif !important;
+    font-size: 1.5rem !important;
+    font-weight: 700 !important;
+    color: var(--primary-glow) !important;
+    opacity: 0.8 !important;
+    min-width: 40px !important;
+    text-align: center !important;
+}
+
+.principle-text {
+    font-size: 1.25rem !important;
+    font-weight: 500 !important;
+    color: #fff !important;
+    flex: 1 !important;
+}
+
+/* 10. 修复引用样式 */
+.branch-quote {
+    position: relative !important;
+    background: rgba(14, 165, 233, 0.05) !important;
+    border-radius: 16px !important;
+    padding: 2rem !important;
+    margin-top: auto !important;
+    border: 1px solid rgba(14, 165, 233, 0.1) !important;
+}
+
+.branch-quote p {
+    font-size: 1.25rem !important;
+    font-weight: 600 !important;
+    font-style: italic !important;
+    line-height: 1.6 !important;
+    position: relative !important;
+    z-index: 1 !important;
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.branch-quote::before {
+    content: '"' !important;
+    position: absolute !important;
+    top: 1rem !important;
+    left: 1rem !important;
+    font-size: 4rem !important;
+    color: var(--primary-glow) !important;
+    opacity: 0.1 !important;
+    line-height: 0 !important;
+}
+
+/* 11. 修复分隔线 */
+.paths-divider {
+    position: relative !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: auto !important;
+    z-index: 1 !important;
+}
+
+.paths-divider::before {
+    content: '' !important;
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: 2px !important;
+    height: 70% !important;
+    background: linear-gradient(
+        to bottom,
+        transparent,
+        var(--primary-glow),
+        transparent
+    ) !important;
+}
+
+.vs-text {
+    width: 60px !important;
+    height: 60px !important;
+    background: linear-gradient(135deg, var(--primary-glow), var(--secondary-glow)) !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 1.5rem !important;
+    font-weight: 800 !important;
+    color: #fff !important;
+    position: relative !important;
+    z-index: 1 !important;
+    box-shadow: 0 0 20px rgba(14, 165, 233, 0.3) !important;
+}
+
+/* 12. 强制覆盖第五部分的响应式样式 */
+@media (max-width: 1080px) {
+    .path-contrast {
+        grid-template-columns: 1fr !important;
+        grid-template-rows: auto auto auto !important;
+        gap: 3rem !important;
+    }
+    
+    .paths-divider {
+        flex-direction: row !important;
+        height: 60px !important;
+    }
+    
+    .paths-divider::before {
+        width: 70% !important;
+        height: 2px !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .branch-title {
+        font-size: 2rem !important;
+    }
+    
+    .path-icon {
+        width: 70px !important;
+        height: 70px !important;
+    }
+    
+    .branch-symbol {
+        font-size: 2rem !important;
+    }
+    
+    .principle-text {
+        font-size: 1.125rem !important;
+    }
+    
+    .branch-quote p {
+        font-size: 1.125rem !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .path-branch {
+        padding: 2rem 1.5rem !important;
+    }
+    
+    .branch-title {
+        font-size: 1.75rem !important;
+    }
+    
+    .branch-metaphor {
+        font-size: 1rem !important;
+    }
+    
+    .principle-marker {
+        font-size: 1.25rem !important;
+        min-width: 30px !important;
+    }
+    
+    .principle-text {
+        font-size: 1rem !important;
+    }
+    
+    .branch-quote {
+        padding: 1.5rem !important;
     }
 } 
