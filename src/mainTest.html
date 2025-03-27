@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>电竞天赋测试 - 能力评估</title>
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/test.css">
+</head>
+<body>
+    <!-- 保持与主页相同的导航按钮 -->
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="views/login/index.html" class="user-avatar">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M10 10C12.21 10 14 8.21 14 6C14 3.79 12.21 2 10 2C7.79 2 6 3.79 6 6C6 8.21 7.79 10 10 10ZM10 12C7.33 12 2 13.34 2 16V18H18V16C18 13.34 12.67 12 10 12Z" fill="currentColor"/>
+                </svg>
+            </a>
+        </div>
+    </nav>
+
+    <!-- 测试页面标题部分 -->
+    <header class="test-header">
+        <h1 class="test-title">全方位能力评估</h1>
+        <p class="test-subtitle">六项专业测试，全面评估您的电竞天赋</p>
+    </header>
+
+    <!-- 游戏测试卡片网格 -->
+    <section class="games-grid">
+        <!-- 反应速度测试 -->
+        <div class="game-card">
+            <div class="game-content">
+                <div class="game-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                        <path d="M12 2v20M2 12h20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <h3 class="game-title">反应速度测试</h3>
+                <p class="game-description">测试您对突发状况的反应能力，评估基础反应速度水平</p>
+                <div class="game-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">最佳记录</span>
+                        <span class="stat-value">0.185s</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">测试次数</span>
+                        <span class="stat-value">12</span>
+                    </div>
+                </div>
+                <div class="game-actions">
+                    <a href="views/games/reactiontest/index.html" class="start-button">
+                        开始测试
+                        <span class="button-glow"></span>
+                    </a>
+                    <button class="history-button">
+                        历史记录
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                            <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 目标追踪测试 -->
+        <div class="game-card">
+            <div class="game-content">
+                <div class="game-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                        <circle cx="12" cy="12" r="3" fill="currentColor"/>
+                    </svg>
+                </div>
+                <h3 class="game-title">目标追踪测试</h3>
+                <p class="game-description">评估您的目标跟踪能力和手眼协调性</p>
+                <div class="game-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">最高分数</span>
+                        <span class="stat-value">89%</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">测试次数</span>
+                        <span class="stat-value">8</span>
+                    </div>
+                </div>
+                <div class="game-actions">
+                    <a href="views/games/trackingtest/index.html" class="start-button">
+                        开始测试
+                        <span class="button-glow"></span>
+                    </a>
+                    <button class="history-button">
+                        历史记录
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                            <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 精准射击测试 -->
+        <div class="game-card">
+            <div class="game-content">
+                <div class="game-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                        <path d="M12 2L2 12l10 10 10-10L12 2z" stroke="currentColor" stroke-width="2"/>
+                    </svg>
+                </div>
+                <h3 class="game-title">精准射击测试</h3>
+                <p class="game-description">测试您的瞄准精度和快速点击能力</p>
+                <div class="game-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">命中率</span>
+                        <span class="stat-value">92%</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">测试次数</span>
+                        <span class="stat-value">15</span>
+                    </div>
+                </div>
+                <div class="game-actions">
+                    <a href="views/games/shootgame/index.html" class="start-button">
+                        开始测试
+                        <span class="button-glow"></span>
+                    </a>
+                    <button class="history-button">
+                        历史记录
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                            <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 记忆力测试 -->
+        <div class="game-card">
+            <div class="game-content">
+                <div class="game-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                        <rect x="4" y="4" width="16" height="16" stroke="currentColor" stroke-width="2"/>
+                        <path d="M4 9h16M9 4v16" stroke="currentColor" stroke-width="2"/>
+                    </svg>
+                </div>
+                <h3 class="game-title">记忆力测试</h3>
+                <p class="game-description">评估您的短期记忆能力和空间识别能力</p>
+                <div class="game-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">最高等级</span>
+                        <span class="stat-value">8</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">测试次数</span>
+                        <span class="stat-value">6</span>
+                    </div>
+                </div>
+                <div class="game-actions">
+                    <a href="views/games/matchgame/index.html" class="start-button">
+                        开始测试
+                        <span class="button-glow"></span>
+                    </a>
+                    <button class="history-button">
+                        历史记录
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                            <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 多任务处理测试 -->
+        <div class="game-card">
+            <div class="game-content">
+                <div class="game-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                        <path d="M12 6v6l4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <h3 class="game-title">多任务处理测试</h3>
+                <p class="game-description">测试您同时处理多个目标的能力</p>
+                <div class="game-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">最高分数</span>
+                        <span class="stat-value">76分</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">测试次数</span>
+                        <span class="stat-value">4</span>
+                    </div>
+                </div>
+                <div class="game-actions">
+                    <a href="views/games/multitask/index.html" class="start-button">
+                        开始测试
+                        <span class="button-glow"></span>
+                    </a>
+                    <button class="history-button">
+                        历史记录
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                            <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 策略决策测试 -->
+        <div class="game-card">
+            <div class="game-content">
+                <div class="game-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                        <path d="M4 4h16v16H4V4z" stroke="currentColor" stroke-width="2"/>
+                        <path d="M12 8v8M8 12h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <h3 class="game-title">策略决策测试</h3>
+                <p class="game-description">评估您的战略思维和快速决策能力</p>
+                <div class="game-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">最高得分</span>
+                        <span class="stat-value">85分</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">测试次数</span>
+                        <span class="stat-value">7</span>
+                    </div>
+                </div>
+                <div class="game-actions">
+                    <a href="views/games/strategy/index.html" class="start-button">
+                        开始测试
+                        <span class="button-glow"></span>
+                    </a>
+                    <button class="history-button">
+                        历史记录
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                            <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="assets/js/test.js"></script>
+</body>
+</html>

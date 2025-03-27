@@ -365,4 +365,29 @@ document.addEventListener('DOMContentLoaded', () => {
             initCarousels();
         }
     }, 2000);
+
+    // 鼠标移动光效
+    document.addEventListener('mousemove', (e) => {
+        const x = (e.clientX / window.innerWidth) * 100;
+        const y = (e.clientY / window.innerHeight) * 100;
+        
+        document.documentElement.style.setProperty('--mouse-x', `${x}%`);
+        document.documentElement.style.setProperty('--mouse-y', `${y}%`);
+    });
+
+    // 优化性能：使用 requestAnimationFrame
+    let ticking = false;
+    document.addEventListener('mousemove', (e) => {
+        if (!ticking) {
+            window.requestAnimationFrame(() => {
+                const x = (e.clientX / window.innerWidth) * 100;
+                const y = (e.clientY / window.innerHeight) * 100;
+                
+                document.documentElement.style.setProperty('--mouse-x', `${x}%`);
+                document.documentElement.style.setProperty('--mouse-y', `${y}%`);
+                ticking = false;
+            });
+            ticking = true;
+        }
+    });
 }); 
